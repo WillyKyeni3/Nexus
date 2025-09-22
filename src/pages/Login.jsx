@@ -7,7 +7,8 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
+    const navigate = useNavigate();
     // Example POST request to Flask backend
     fetch("http://localhost:5000/login", {
       method: "POST",
@@ -18,6 +19,9 @@ export default function LoginPage() {
       .then((data) => {
         if (data.success) {
           alert("Login successful!");
+          // both codes bellow work for redirection they redirrect you if the log in becomes successfull
+          // window.location.href = "/dashboard";
+          navigate('/dashboard');
           // redirect to dashboard
         } else {
           alert("Invalid credentials");
