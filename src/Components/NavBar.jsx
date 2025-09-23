@@ -25,6 +25,11 @@ const NavBar = () => {
 				   <li>
 					   <Link to="/projectdetail">Projects</Link>
 				   </li>
+					 {user && user.role !== "mentor" && (
+						 <li>
+							 <Link to="/projectform">Create Project</Link>
+						 </li>
+					 )}
 				{user ? (
 					<>
 						<li>
