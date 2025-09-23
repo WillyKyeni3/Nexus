@@ -6,7 +6,9 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-class User(db.Model, SerializerMixin):
+from flask_login import UserMixin
+
+class User(db.Model, SerializerMixin, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
