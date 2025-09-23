@@ -1,26 +1,36 @@
 #!/usr/bin/env python3
 
-# Standard library imports
-
-# Remote library imports
-from flask import request
+from flask import Flask, request
 from flask_restful import Resource
+from flask_migrate import Migrate
+from flask_cors import CORS
+from flask_login import LoginManager
 
 # Local imports
-from Config import app, db, api
-# Add your model imports
-from Models import Project, User, Cohort
-from Routes import project_routes
-from Routes import auth_routes
+from Models import db, Project, User, Cohort
+from Routes import project_routes, auth_routes
+from Routes.vote_routes import votes_bp
 
+# Initialize app
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Views go here!
+# Setup extensions
+CORS(app)
+db.init_app(app)
+migrate = Migrate(app, db)
+login_manager = LoginManager(app)
+
+# Register blueprints / routes
+app.register_blueprint(votes_bp)
+# If project_routes and auth_routes are blueprints, register them too
+# app.register_blueprint(project_routes)
+# app.register_blueprint(auth_routes)
 
 @app.route('/')
 def index():
     return '<h1>Project Server</h1>'
 
-
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
-
