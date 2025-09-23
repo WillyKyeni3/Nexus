@@ -25,7 +25,7 @@ const routes = [
         element: <Profile />,
       },
       {
-        path: "/projectdetail",
+        path: "/projects/:id",
         element: <Projectdetail />,
       },
       {
