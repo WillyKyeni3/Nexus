@@ -1,131 +1,88 @@
-import { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Api from "../Services/Api";
+
+
+const SignupSchema = Yup.object().shape({
+   username: Yup.string().required("Username is required"),
+   email: Yup.string().email("Invalid email").required("Email is required"),
+   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+   role: Yup.string().oneOf(["student", "mentor"]).required("Role is required"),
+   cohort: Yup.string().required("Cohort is required"),
+});
+
+
 
 
 function Signup() {
-  const navigate = useNavigate();
+   const { login } = useContext(AuthContext);
+   const [error, setError] = useState(null);
+   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+   const handleSubmit = async (values, { setSubmitting }) => {
+       setError(null);
+       try {
+           await Api.post("/signup", values);
+           // Auto-login after signup
+           await login(values.email, values.password);
+           navigate("/");
+       } catch (err) {
+           setError(err.response?.data?.error || "Signup failed");
+       }
+       setSubmitting(false);
+   };
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
 
-    fetch("http://localhost:5000/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message === "User created successfully") {
-          alert("Signup successful!");
-          navigate("/Home");
-        } else {
-          setError(data.error || "Signup failed");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Something went wrong. Try again.");
-      });
-  };
-
-  return (
-    <div className="">
-      <div className="w-full max-w-md bg-blue-900 text-white p-8 rounded-2xl shadow-lg">
-        
-        {/* Logo placeholder */}
-        <div className="flex justify-center mb-4">
-          <img
-            src="/logo.png"
-            alt="Nexus Logo"
-            className="h-16 w-16 object-contain"
-          />
-        </div>
-
-        <h2 className="text-3xl font-bold text-center">Create Account</h2>
-        <p className="text-center text-sm mt-2">NEXUS</p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          {/* Username */}
-          <div>
-            <label className="block text-sm font-medium">Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full mt-1 px-4 py-3 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-3 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-3 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-medium">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-3 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
-
-          {/* Error */}
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition duration-300"
-          >
-            Sign Up
-          </button>
-        </form>
-
-        {/* Footer */}
-        <p className="mt-6 text-center text-sm text-gray-300">
-          Already have an account?{" "}
-          <a href="/login" className="text-red-400 font-medium hover:underline">
-            Log In
-          </a>
-        </p>
-      </div>
-    </div>
-  );
+   return (
+       <div className="auth-form-container">
+           <h2>Signup</h2>
+           <Formik
+               initialValues={{ username: "", email: "", password: "", role: "student", cohort: "" }}
+               validationSchema={SignupSchema}
+               onSubmit={handleSubmit}
+           >
+               {({ isSubmitting }) => (
+                   <Form className="auth-form">
+                       <div>
+                           <label htmlFor="username">Username</label>
+                           <Field name="username" type="text" />
+                           <ErrorMessage name="username" component="div" className="error" />
+                       </div>
+                       <div>
+                           <label htmlFor="email">Email</label>
+                           <Field name="email" type="email" />
+                           <ErrorMessage name="email" component="div" className="error" />
+                       </div>
+                       <div>
+                           <label htmlFor="password">Password</label>
+                           <Field name="password" type="password" />
+                           <ErrorMessage name="password" component="div" className="error" />
+                       </div>
+                       <div>
+                           <label htmlFor="role">Role</label>
+                           <Field as="select" name="role">
+                               <option value="student">Student</option>
+                               <option value="mentor">Mentor</option>
+                           </Field>
+                           <ErrorMessage name="role" component="div" className="error" />
+                       </div>
+                       <div>
+                           <label htmlFor="cohort">Cohort</label>
+                           <Field name="cohort" type="text" placeholder="Enter cohort name" />
+                           <ErrorMessage name="cohort" component="div" className="error" />
+                       </div>
+                       <button type="submit" disabled={isSubmitting}>Signup</button>
+                       {error && <div className="error">{error}</div>}
+                   </Form>
+               )}
+           </Formik>
+       </div>
+   );
 }
+
 
 export default Signup;

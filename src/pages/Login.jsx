@@ -1,73 +1,64 @@
-import React, { useState,useNavigate } from "react";
 
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+import React, { useContext, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    const navigate = useNavigate();
-    // Example POST request to Flask backend
-    fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Login successful!");
-          // both codes bellow work for redirection they redirrect you if the log in becomes successfull
-          // window.location.href = "/dashboard";
-          navigate('/Projectdetail');
-          // redirect to dashboard
-        } else {
-          alert("Invalid credentials");
-        }
-      })
-      .catch((err) => console.error(err));
-  };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-500 to-red-600">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
+const LoginSchema = Yup.object().shape({
+   email: Yup.string().email("Invalid email").required("Email is required"),
+   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
 
-          <div>
-            <label className="block text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300"
-          >
-            Log In
-          </button>
-        </form>
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          Don’t have an account? <a href="/signup" className="text-red-500 hover:underline">Sign Up</a>
-        </p>
-      </div>
-    </div>
-  );
+function Login() {
+   const { login } = useContext(AuthContext);
+   const [error, setError] = useState(null);
+   const navigate = useNavigate();
+
+
+   const handleSubmit = async (values, { setSubmitting }) => {
+       setError(null);
+       const res = await login(values.email, values.password);
+       if (res.success) {
+           navigate("/");
+       } else {
+           setError(res.error);
+       }
+       setSubmitting(false);
+   };
+
+
+   return (
+       <div className="auth-form-container">
+           <h2>Login</h2>
+           <Formik
+               initialValues={{ email: "", password: "" }}
+               validationSchema={LoginSchema}
+               onSubmit={handleSubmit}
+           >
+               {({ isSubmitting }) => (
+                   <Form className="auth-form">
+                       <div>
+                           <label htmlFor="email">Email</label>
+                           <Field name="email" type="email" />
+                           <ErrorMessage name="email" component="div" className="error" />
+                       </div>
+                       <div>
+                           <label htmlFor="password">Password</label>
+                           <Field name="password" type="password" />
+                           <ErrorMessage name="password" component="div" className="error" />
+                       </div>
+                       <button type="submit" disabled={isSubmitting}>Login</button>
+                       {error && <div className="error">{error}</div>}
+                   </Form>
+               )}
+           </Formik>
+       </div>
+   );
 }
+
+
+export default Login;
