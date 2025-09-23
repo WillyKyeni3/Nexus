@@ -1,10 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
-from flask_login import UserMixin
 from datetime import datetime, timezone
-
-db = SQLAlchemy()
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import validates
+from sqlalchemy_serializer import SerializerMixin
+from Config import db
 
 
 class User(db.Model, SerializerMixin, UserMixin):
@@ -13,17 +12,36 @@ class User(db.Model, SerializerMixin, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
-    _password_hash = db.Column(db.String)
-    role = db.Column(db.String, nullable=False)  # 'mentor' or 'student'
+    password_hash = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=False, default="student")  # 'student' or 'mentor'
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # Relationships
-    projects = db.relationship('Project', backref='owner', lazy=True)
+    projects = db.relationship('Project', back_populates='user', cascade="all, delete-orphan")
     votes = db.relationship('Vote', backref='mentor', lazy=True)
+    cohort = db.relationship('Cohort', back_populates='users')
 
     # Serialization rules
-    serialize_rules = ('-_password_hash', '-projects.owner', '-votes.mentor')
+    serialize_rules = ('-projects.user', '-cohort.users', '-votes.mentor')
+
+    # Password helpers
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+class Cohort(db.Model, SerializerMixin):
+    __tablename__ = 'cohorts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+
+    # Relationships
+    users = db.relationship('User', back_populates='cohort', cascade="all, delete-orphan")
 
 
 class Project(db.Model, SerializerMixin):
@@ -32,7 +50,7 @@ class Project(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.Text, nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     author_name = db.Column(db.String, nullable=False, default='Unknown Author')
     status = db.Column(db.String, default="pending")
@@ -41,10 +59,11 @@ class Project(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # Relationships
+    user = db.relationship('User', back_populates='projects')
     votes = db.relationship('Vote', backref='project', cascade='all, delete-orphan')
 
     # Serialization rules
-    serialize_rules = ('-owner.projects', '-votes.project')
+    serialize_rules = ('-user.projects', '-votes.project')
 
     # Validations
     @validates('title')
