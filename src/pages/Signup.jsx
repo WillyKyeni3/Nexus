@@ -75,4 +75,12 @@ function Signup() {
             <div>
               <label htmlFor="cohort">Cohort</label>
               <Field name="cohort" type="text" placeholder="Enter cohort name" />
-              <ErrorMessage name="cohort" component="div"
+              <ErrorMessage name="cohort" component="div" />
+            </div>
+          </Form>
+        )}
+      </Formik>
+      {error && <div className="error">{error}</div>}
+    </div>
+  );
+}
