@@ -21,7 +21,7 @@ export default function LoginPage() {
           alert("Login successful!");
           // both codes bellow work for redirection they redirrect you if the log in becomes successfull
           // window.location.href = "/dashboard";
-          navigate('/dashboard');
+          navigate('/Projectdetail');
           // redirect to dashboard
         } else {
           alert("Invalid credentials");
