@@ -1,30 +1,31 @@
-# Standard library imports
-
+#!/usr/bin/env python3
 
 # Remote library imports
 from flask import request
 from flask_restful import Resource
-
+from flask_migrate import Migrate
+from flask_cors import CORS
+from flask_login import LoginManager
 
 # Local imports
-from Config import app, db, api
-# Add your model imports
+from Config import app, db, api   # Use central config
 from Models import Project, User, Cohort
-from Routes import project_routes
-from Routes import auth_routes
+from Routes import project_routes, auth_routes
+from Routes.vote_routes import votes_bp
 
+# Setup extensions
+CORS(app)
+migrate = Migrate(app, db)
+login_manager = LoginManager(app)
 
-
-
-# Views go here!
-
+# Register blueprints / routes
+app.register_blueprint(votes_bp)
+app.register_blueprint(project_routes)
+app.register_blueprint(auth_routes)
 
 @app.route('/')
 def index():
-   return '<h1>Project Server</h1>'
-
-
-
+    return '<h1>Project Server</h1>'
 
 if __name__ == '__main__':
-   app.run(port=5555, debug=True)
+    app.run(port=5555, debug=True)
