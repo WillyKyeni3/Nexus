@@ -1,11 +1,11 @@
 import "../App.css";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../Context/AuthContext";
+import { useAuth } from "../Context/AuthContext.jsx";
 
 
 const NavBar = () => {
-	const { user, logout } = useContext(AuthContext);
+	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
@@ -14,40 +14,47 @@ const NavBar = () => {
 	};
 
 	return (
-		<nav className="navbar">
-			<div className="navbar-logo">
-				<Link to="/">Nexus</Link>
-			</div>
-			<ul className="navbar-links">
-				   <li>
-					   <Link to="/">Home</Link>
-				   </li>
-				   <li>
-					   <Link to="/projectdetail">Projects</Link>
-				   </li>
-				{user ? (
-					<>
-						<li>
-							<Link to="/profile">Profile</Link>
-						</li>
-						<li>
-							<button className="navbar-btn" onClick={handleLogout}>
-								Logout
-							</button>
-						</li>
-					</>
-				) : (
-					<>
-						<li>
-							<Link to="/login">Login</Link>
-						</li>
-						<li>
-							<Link to="/signup">Signup</Link>
-						</li>
-					</>
-				)}
-			</ul>
-		</nav>
+    <nav className="bg-white shadow-md">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex-shrink-0">
+            <Link to="/" className="text-2xl font-bold text-blue-600">
+              Nexus
+            </Link>
+          </div>
+          <div className="flex space-x-4">
+            <Link to="/" className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600">
+              Home
+            </Link>
+            <Link to="/projectform" className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600">
+              Add Project
+            </Link>
+            {user ? (
+              <>
+                <Link to="/profile" className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600">
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600">
+                  Login
+                </Link>
+                <Link to="/signup" className="px-3 py-2 rounded-md text-gray-700 hover:text-blue-600">
+                  Signup
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
 	);
 };
 

@@ -22,3 +22,28 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask
+instance/
+.webassets-cache
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Flask migrations
+migrations/
+!migrations/.gitkeep
+
+# Environment variables
+.env
+.venv
+env/
+venv/
+ENV/
