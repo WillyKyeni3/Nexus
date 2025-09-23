@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import tailwindcss from "@tailwindcss/vite";
+
 
 function Signup() {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-500 to-red-600 px-4">
+    <div className="">
       <div className="w-full max-w-md bg-blue-900 text-white p-8 rounded-2xl shadow-lg">
         
         {/* Logo placeholder */}
