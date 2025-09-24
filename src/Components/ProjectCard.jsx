@@ -9,7 +9,7 @@ const ProjectCard = ({ project, isOwner, onEdit, onDelete, showCreateButton }) =
       <h3>{project.title}</h3>
       <p>{project.description}</p>
       <p>
-        <strong>Created:</strong> {new Date(project.date_created).toLocaleString()}
+        <strong>Created:</strong> {new Date(project.created_at).toLocaleString()}
       </p>
       <p>
         <strong>Author:</strong> {project.author_name || "Unknown"}

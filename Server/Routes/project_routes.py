@@ -102,7 +102,12 @@ class UsersByID(Resource):
         db.session.commit()
         return make_response({}, 204)
     
-
+class ProjectDetail(Resource):
+    def get(self, id):
+        project = Project.query.get(id)
+        if not project:
+            return make_response({'error': 'project not found'}, 404)
+        return make_response(project.to_dict(),200)
     
 
 api.add_resource(Projects, '/projects')
@@ -110,6 +115,7 @@ api.add_resource(ProjectsByID, '/projects/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(UsersByID, '/users/<int:id>')
 api.add_resource(ProjectsByUserID, '/users/<int:user_id>/projects')
+api.add_resource(ProjectDetail, '/projectdetail')
 
 
 
