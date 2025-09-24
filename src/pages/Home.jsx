@@ -27,41 +27,42 @@ function Home() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="project-feed">
-      <h2>Project Feed</h2>
+    <div className="project-feed fade-in">
+      <div className="feed-header">
+        <h2>Project Feed</h2>
+        {user && user.role !== "mentor" && (
+          <button className="btn-accent" onClick={() => navigate("/projectform")}>
+            Create Project
+          </button>
+        )}
+      </div>
 
-      {/* Filter bar */}
       <FilterBar />
 
-      {/* Create project button (hidden for mentors) */}
-      {user && user.role !== "mentor" && (
-        <button onClick={() => navigate("/projectform")}>Create Project</button>
-      )}
-
-      {/* Project list */}
       {projects.length === 0 ? (
-        <div>No projects found.</div>
+        <div className="no-projects">No projects found.</div>
       ) : (
-        <ul>
+        <div className="projects-grid">
           {projects.map((project) => (
-            <li key={project.id} style={{ marginBottom: "1rem" }}>
+            <div key={project.id} className="project-card">
               <Link to={`/projects/${project.id}`}>
                 <h3>{project.title}</h3>
               </Link>
               <p>{project.description}</p>
-              <small>By: {project.author_name || "Unknown Author"}</small>
-              <div>
-                Votes:{" "}
-                {project.votes?.filter((v) => v.status === "approved").length ||
-                  0}{" "}
-                approved,{" "}
-                {project.votes?.filter((v) => v.status === "declined").length ||
-                  0}{" "}
-                declined
+              <div className="project-meta">
+                <div>By: {project.author_name || "Unknown Author"}</div>
+                <div className="vote-count">
+                  <span className="votes approved">
+                    ✓ {project.votes?.filter((v) => v.status === "approved").length || 0}
+                  </span>
+                  <span className="votes declined">
+                    ✗ {project.votes?.filter((v) => v.status === "declined").length || 0}
+                  </span>
+                </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

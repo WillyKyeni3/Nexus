@@ -23,9 +23,12 @@ function Signup() {
   const handleSubmit = async (values, { setSubmitting }) => {
     setError(null);
     try {
-      await Api.post("/signup", values);
+      // ✅ Include credentials so session cookie is stored
+      await Api.post("/signup", values, { withCredentials: true });
+
       // Auto-login after signup
       await login(values.email, values.password);
+
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.error || "Signup failed");
@@ -34,8 +37,8 @@ function Signup() {
   };
 
   return (
-    <div className="auth-form-container">
-      <h2>Signup</h2>
+    <div className="auth-form-container fade-in">
+      <h2 className="form-title">Create Account</h2>
       <Formik
         initialValues={{
           username: "",
@@ -49,35 +52,42 @@ function Signup() {
       >
         {({ isSubmitting }) => (
           <Form className="auth-form">
-            <div>
-              <label htmlFor="username">Username</label>
-              <Field name="username" type="text" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="username">Username</label>
+              <Field name="username" type="text" className="form-input" />
               <ErrorMessage name="username" component="div" className="error" />
             </div>
-            <div>
-              <label htmlFor="email">Email</label>
-              <Field name="email" type="email" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">Email</label>
+              <Field name="email" type="email" className="form-input" />
               <ErrorMessage name="email" component="div" className="error" />
             </div>
-            <div>
-              <label htmlFor="password">Password</label>
-              <Field name="password" type="password" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="password">Password</label>
+              <Field name="password" type="password" className="form-input" />
               <ErrorMessage name="password" component="div" className="error" />
             </div>
-            <div>
-              <label htmlFor="role">Role</label>
-              <Field as="select" name="role">
+            <div className="form-group">
+              <label className="form-label" htmlFor="role">Role</label>
+              <Field as="select" name="role" className="form-input">
                 <option value="student">Student</option>
                 <option value="mentor">Mentor</option>
               </Field>
               <ErrorMessage name="role" component="div" className="error" />
             </div>
-            <div>
-              <label htmlFor="cohort">Cohort</label>
-              <Field name="cohort" type="text" placeholder="Enter cohort name" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="cohort">Cohort</label>
+              <Field 
+                name="cohort" 
+                type="text" 
+                placeholder="Enter cohort name" 
+                className="form-input"
+              />
               <ErrorMessage name="cohort" component="div" className="error" />
             </div>
-            <button type="submit" disabled={isSubmitting}>Signup</button>
+            <button type="submit" className="form-submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating Account..." : "Sign Up"}
+            </button>
             {error && <div className="error">{error}</div>}
           </Form>
         )}

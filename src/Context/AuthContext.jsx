@@ -19,7 +19,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await Api.post("/login", { email, password });
+      const res = await Api.post(
+        "/login",
+        { email, password },
+        { withCredentials: true } // ✅ force credentials
+      );
       setUser(res.data);
       localStorage.setItem("user", JSON.stringify(res.data));
       return { success: true };
@@ -33,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await Api.post("/logout");
+      await Api.post("/logout", {}, { withCredentials: true }); // ✅ credentials here too
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -42,7 +46,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // Optional: check session on mount, refresh token, etc.
+    // Optional: auto-check session on mount
+    const checkSession = async () => {
+      try {
+        const res = await Api.get("/me", { withCredentials: true });
+        setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+      } catch {
+        setUser(null);
+        localStorage.removeItem("user");
+      }
+    };
+    checkSession();
   }, []);
 
   return (
