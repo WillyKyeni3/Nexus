@@ -15,22 +15,26 @@ function ProjectDetail() {
   const [deleteError, setDeleteError] = useState(null);
 
   useEffect(() => {
-    // Fetch project details
-    Api.get(`/projects/${id}`)
-      .then((res) => {
-        setProject(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Failed to load project.");
-        setLoading(false);
-      });
+  // Fetch project details
+  Api.get(`/projects/${id}`)
+    .then((res) => {
+      setProject(res.data);
+      setLoading(false);
+    })
+    .catch(() => {
+      setError("Failed to load project.");
+      setLoading(false);
+    });
 
-    // Fetch vote history
-    Api.get(`/projects/${id}/votes`)
-      .then((res) => setVotes(res.data))
-      .catch(() => setVotes([]));
-  }, [id]);
+  // Fetch vote history
+  Api.get(`/projects/${id}/votes`)
+    .then((res) => {
+      setVotes(res.data.votes || []);   // ✅ pick array
+      // optional: store statistics if you want to display them
+      // setStats(res.data.statistics || {});
+    })
+    .catch(() => setVotes([]));
+}, [id]);
 
   const handleEdit = () => {
     navigate(`/edit-project/${id}`);
@@ -44,12 +48,14 @@ function ProjectDetail() {
   };
 
   const handleVote = (status) => {
-    Api.post(`/projects/${id}/votes`, { status })
-      .then((res) => {
-        setVotes((prev) => [...prev, res.data]);
-      })
-      .catch(() => alert("Failed to submit vote"));
-  };
+  Api.post("/votes", { project_id: project.id, status }, { withCredentials: true })
+    .then((res) => {
+      setVotes((prev) => [...prev, res.data]);
+    })
+    .catch(() => alert("Failed to submit vote"));
+};
+
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -58,20 +64,24 @@ function ProjectDetail() {
   const isOwner = user && user.id === project.user_id;
 
   return (
-    <div className="project-detail styled-card">
+    <div className="project-detail fade-in">
       <h2 className="project-title">{project.title}</h2>
       <p className="project-description">{project.description}</p>
 
       <div className="project-meta">
         <span>
-          <strong>Created:</strong>{" "}
-          {new Date(project.date_created).toLocaleString()}
+          <strong>Created</strong>
+          {new Date(project.created_at).toLocaleString()}
         </span>
         <span>
-          <strong>Author:</strong> {project.author_name || "Unknown"}
+          <strong>Author</strong>
+          {project.author_name || "Unknown"}
         </span>
         <span>
-          <strong>Status:</strong> {project.status || "Pending"}
+          <strong>Status</strong>
+          <span className={`status-badge status-${project.status || 'pending'}`}>
+            {project.status || "Pending"}
+          </span>
         </span>
       </div>
 
@@ -79,10 +89,10 @@ function ProjectDetail() {
       {isOwner && (
         <div className="owner-actions">
           <button className="edit-btn" onClick={handleEdit}>
-            Edit
+            <i className="fas fa-edit"></i> Edit Project
           </button>
           <button className="delete-btn" onClick={handleDelete}>
-            Delete
+            <i className="fas fa-trash"></i> Delete Project
           </button>
           {deleteError && <div className="error">{deleteError}</div>}
         </div>
@@ -95,13 +105,13 @@ function ProjectDetail() {
             className="approve-btn"
             onClick={() => handleVote("approved")}
           >
-            Approve
+            <i className="fas fa-check"></i> Approve
           </button>
           <button
             className="decline-btn"
             onClick={() => handleVote("declined")}
           >
-            Decline
+            <i className="fas fa-times"></i> Decline
           </button>
         </div>
       )}
@@ -110,12 +120,15 @@ function ProjectDetail() {
       <div className="vote-history">
         <h3>Vote History</h3>
         {votes.length === 0 ? (
-          <p>No votes yet.</p>
+          <p className="no-votes">No votes yet.</p>
         ) : (
           <ul>
             {votes.map((v, idx) => (
               <li key={idx}>
-                {v.mentor_name || "Mentor"}: {v.status}
+                <span>{v.mentor_name || "Mentor"}</span>
+                <span className={`status-badge status-${v.status}`}>
+                  {v.status}
+                </span>
               </li>
             ))}
           </ul>

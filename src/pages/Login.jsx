@@ -28,8 +28,8 @@ function Login() {
   };
 
   return (
-    <div className="auth-form-container">
-      <h2>Login</h2>
+    <div className="auth-form-container fade-in">
+      <h2 className="form-title">Welcome Back</h2>
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={LoginSchema}
@@ -37,18 +37,18 @@ function Login() {
       >
         {({ isSubmitting }) => (
           <Form className="auth-form">
-            <div>
-              <label htmlFor="email">Email</label>
-              <Field name="email" type="email" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">Email</label>
+              <Field name="email" type="email" className="form-input" />
               <ErrorMessage name="email" component="div" className="error" />
             </div>
-            <div>
-              <label htmlFor="password">Password</label>
-              <Field name="password" type="password" />
+            <div className="form-group">
+              <label className="form-label" htmlFor="password">Password</label>
+              <Field name="password" type="password" className="form-input" />
               <ErrorMessage name="password" component="div" className="error" />
             </div>
-            <button type="submit" disabled={isSubmitting}>
-              Login
+            <button type="submit" className="form-submit" disabled={isSubmitting}>
+              {isSubmitting ? "Logging in..." : "Login"}
             </button>
             {error && <div className="error">{error}</div>}
           </Form>

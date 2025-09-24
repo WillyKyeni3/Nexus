@@ -28,24 +28,49 @@ function Profile() {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="profile-container">
-            <h2>Profile</h2>
-            <p><strong>Username:</strong> {profile.username}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Role:</strong> {profile.role}</p>
-            <p><strong>Cohort:</strong> {profile.cohort || "N/A"}</p>
-            <h3>Projects</h3>
-            {profile.projects.length === 0 ? (
-                <div>No projects found.</div>
-            ) : (
-                <ul>
-                    {profile.projects.map((p) => (
-                        <li key={p.id}>
-                            <strong>{p.title}</strong> - {p.status}
-                        </li>
-                    ))}
-                </ul>
-            )}
+        <div className="profile-container fade-in">
+            <div className="profile-header">
+                <h2>Profile</h2>
+            </div>
+            
+            <div className="profile-info">
+                <div className="info-group">
+                    <label className="info-label">Username</label>
+                    <div className="info-value">{profile.username}</div>
+                </div>
+                <div className="info-group">
+                    <label className="info-label">Email</label>
+                    <div className="info-value">{profile.email}</div>
+                </div>
+                <div className="info-group">
+                    <label className="info-label">Role</label>
+                    <div className="info-value">{profile.role}</div>
+                </div>
+                <div className="info-group">
+                    <label className="info-label">Cohort</label>
+                    <div className="info-value">{profile.cohort || "N/A"}</div>
+                </div>
+            </div>
+            
+            <div className="profile-section">
+                <h3>My Projects</h3>
+                {profile.projects.length === 0 ? (
+                    <div className="no-projects">No projects found.</div>
+                ) : (
+                    <div className="projects-grid">
+                        {profile.projects.map((p) => (
+                            <div key={p.id} className="project-card">
+                                <h3>{p.title}</h3>
+                                <div className="project-meta">
+                                    <span className={`status-badge status-${p.status}`}>
+                                        {p.status}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

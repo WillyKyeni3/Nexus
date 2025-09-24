@@ -35,36 +35,44 @@ const ProjectForm = () => {
   };
 
   return (
-    <Formik
-  initialValues={{ title: "", description: "", author_name: "" }}
-      validationSchema={ProjectSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form className="project-form">
-          <div>
-            <label htmlFor="title">Title</label>
-            <Field name="title" type="text" />
-            <ErrorMessage name="title" component="div" className="error" />
-          </div>
-          <div>
-            <label htmlFor="description">Description</label>
-            <Field name="description" as="textarea" />
-            <ErrorMessage name="description" component="div" className="error" />
-          </div>
-          <div>
-            <label htmlFor="author_name">Author Name</label>
-            <Field name="author_name" type="text" />
-            <ErrorMessage name="author_name" component="div" className="error" />
-          </div>
-          <button type="submit" disabled={isSubmitting}>
-            Create Project
-          </button>
-          {success && <div className="success">{success}</div>}
-          {error && <div className="error">{error}</div>}
-        </Form>
-      )}
-    </Formik>
+    <div className="project-form-container fade-in">
+      <h2 className="form-title">Create New Project</h2>
+      <Formik
+        initialValues={{ title: "", description: "", author_name: "" }}
+        validationSchema={ProjectSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form className="project-form">
+            <div className="form-group">
+              <label className="form-label" htmlFor="title">Project Title</label>
+              <Field name="title" type="text" className="form-input" />
+              <ErrorMessage name="title" component="div" className="error" />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="description">Description</label>
+              <Field 
+                name="description" 
+                as="textarea" 
+                className="form-input" 
+                style={{ minHeight: "120px" }}
+              />
+              <ErrorMessage name="description" component="div" className="error" />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="author_name">Author Name</label>
+              <Field name="author_name" type="text" className="form-input" />
+              <ErrorMessage name="author_name" component="div" className="error" />
+            </div>
+            <button type="submit" className="form-submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create Project"}
+            </button>
+            {success && <div className="success">{success}</div>}
+            {error && <div className="error">{error}</div>}
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 
