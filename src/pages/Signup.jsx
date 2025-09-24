@@ -75,4 +75,15 @@ function Signup() {
             <div>
               <label htmlFor="cohort">Cohort</label>
               <Field name="cohort" type="text" placeholder="Enter cohort name" />
-              <ErrorMessage name="cohort" component="div"
+              <ErrorMessage name="cohort" component="div" className="error" />
+            </div>
+            <button type="submit" disabled={isSubmitting}>Signup</button>
+            {error && <div className="error">{error}</div>}
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+}
+
+export default Signup;
