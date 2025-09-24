@@ -42,6 +42,8 @@ class Login(Resource):
        user = User.query.filter_by(email=email).first()
        if user:
            print(f"[DEBUG] User found: {user.username}, password_hash: {user.password_hash}")
+           print(f"[DEBUG] Provided password: {password}")
+           print(f"[DEBUG] Stored hash: {user.password_hash}")
            password_check = user.check_password(password)
            print(f"[DEBUG] Password check result: {password_check}")
            if password_check:
@@ -58,6 +60,7 @@ class Login(Resource):
            else:
                print(f"[DEBUG] Password check failed for user: {user.username}")
        else:
+           print(f"[DEBUG] No user found with email: {email}")
            print(f"[DEBUG] No user found with email: {email}")
        return {'error': 'Invalid credentials'}, 401
 
