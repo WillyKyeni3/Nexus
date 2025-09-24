@@ -10,7 +10,7 @@ from flask_login import LoginManager
 # Local imports
 from Config import app, db, api   # Use central config
 from Models import Project, User, Cohort
-from Routes import project_routes, auth_routes
+from Routes import project_routes, auth_routes, corhot_routes
 from Routes.vote_routes import votes_bp
 
 # Setup extensions
@@ -20,8 +20,7 @@ login_manager = LoginManager(app)
 
 # Register blueprints / routes
 app.register_blueprint(votes_bp)
-app.register_blueprint(project_routes)
-app.register_blueprint(auth_routes)
+
 
 @app.route('/')
 def index():

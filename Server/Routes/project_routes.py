@@ -50,6 +50,14 @@ class ProjectsByID(Resource):
         db.session.delete(project)
         db.session.commit()
         return make_response({}, 204)
+
+
+class ProjectsByUserID(Resource):
+    def get(self, user_id):
+        projects = Project.query.filter_by(user_id=user_id).all()
+        return make_response(
+            jsonify([project.to_dict() for project in projects])
+        )
     
 
 class Users(Resource):
@@ -101,6 +109,7 @@ api.add_resource(Projects, '/projects')
 api.add_resource(ProjectsByID, '/projects/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(UsersByID, '/users/<int:id>')
+api.add_resource(ProjectsByUserID, '/users/<int:user_id>/projects')
 
 
 
