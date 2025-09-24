@@ -92,28 +92,46 @@ class UserProfile(Resource):
        }
   
 
+class Me(Resource):
+    def get(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"error": "Not authenticated"}, 401
+
+        user = User.query.get(user_id)
+        if not user:
+            return {"error": "User not found"}, 404
+
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "cohort": user.cohort.name if user.cohort else None,
+        }, 200
 
 
 
-   def patch(self, id):
-       user = User.query.get_or_404(id)
-       data = request.get_json()
-       if 'username' in data:
-           user.username = data['username']
-       if 'email' in data:
-           user.email = data['email']
-       if 'password' in data:
-           user.set_password(data['password'])
-       if 'role' in data:
-           user.role = data['role']
-       if 'cohort_id' in data:
-           user.cohort_id = data['cohort_id']
-       try:
-           db.session.commit()
-       except IntegrityError:
-           db.session.rollback()
-           return {'error': 'Username or email already exists'}, 400
-       return {'message': 'Profile updated successfully'}, 200
+
+def patch(self, id):
+    user = User.query.get_or_404(id)
+    data = request.get_json()
+    if 'username' in data:
+        user.username = data['username']
+    if 'email' in data:
+        user.email = data['email']
+    if 'password' in data:
+        user.set_password(data['password'])
+    if 'role' in data:
+        user.role = data['role']
+    if 'cohort_id' in data:
+        user.cohort_id = data['cohort_id']
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return {'error': 'Username or email already exists'}, 400
+    return {'message': 'Profile updated successfully'}, 200
   
 
 
@@ -121,6 +139,7 @@ api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(UserProfile, '/users/<int:id>')
+api.add_resource(Me, "/me")
 
 
 
