@@ -28,5 +28,9 @@ db.init_app(app)
 # Instantiate REST API
 api = Api(app)
 
-# Enable CORS with credentials for frontend
-CORS(app, supports_credentials=True, origins=["http://localhost:5173", "http://localhost:3000"])
+# Enable CORS with credentials for all routes and both dev frontend ports
+CORS(
+    app,
+    supports_credentials=True,
+    resources={r"/*": {"origins": ["http://localhost:5173", "http://localhost:3000"]}},
+)
