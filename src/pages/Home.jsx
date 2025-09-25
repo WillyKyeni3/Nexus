@@ -32,7 +32,7 @@ function Home() {
         <h2>Project Feed</h2>
         {user && user.role !== "mentor" && (
           <button className="btn-accent" onClick={() => navigate("/projectform")}>
-            Create Project
+            <i class="ri-add-line"></i>Create Project
           </button>
         )}
       </div>

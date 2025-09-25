@@ -89,10 +89,10 @@ function ProjectDetail() {
       {isOwner && (
         <div className="owner-actions">
           <button className="edit-btn" onClick={handleEdit}>
-            <i className="fas fa-edit"></i> Edit Project
+            <i className="fas fa-edit"></i> <i class="ri-pencil-line"></i>Edit Project
           </button>
           <button className="delete-btn" onClick={handleDelete}>
-            <i className="fas fa-trash"></i> Delete Project
+            <i className="fas fa-trash"></i> <i class="ri-delete-bin-line"></i>Delete Project
           </button>
           {deleteError && <div className="error">{deleteError}</div>}
         </div>

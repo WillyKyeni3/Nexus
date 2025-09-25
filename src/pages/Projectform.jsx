@@ -36,7 +36,7 @@ const ProjectForm = () => {
 
   return (
     <div className="project-form-container fade-in">
-      <h2 className="form-title">Create New Project</h2>
+      <h2 className="form-title"><i class="ri-add-line"></i>Create New Project</h2>
       <Formik
         initialValues={{ title: "", description: "", author_name: "" }}
         validationSchema={ProjectSchema}
