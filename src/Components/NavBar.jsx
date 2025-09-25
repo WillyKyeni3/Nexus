@@ -30,7 +30,7 @@ const NavBar = () => {
               )}
               <Link to="/profile">Profile</Link>
               <button className="navbar-btn" onClick={handleLogout}>
-                Logout
+                 <i class="ri-logout-box-r-line"></i>Logout
               </button>
             </>
           ) : (
