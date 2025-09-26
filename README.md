@@ -3,7 +3,7 @@
 A full-stack web application for managing projects, mentors, cohorts, and votes. Users can create projects, assign mentors, and track approvals/declines. Built with Flask, PostgreSQL, and React, and deployed on Render.
 
 # Features
-##Backend
+## Backend
 
 REST API with Flask and Flask-RESTful
 
@@ -40,10 +40,21 @@ Fully communicates with deployed backend API
 Search and filter functionality
 
 
-##Deployment
+## Deployment
 
 Backend deployed on Render.com(https://nexus-db-2.onrender.com)
 
 PostgreSQL database hosted on Render
 
 Frontend can be served on any static host or local dev server(https://nexus-seven-orcin.vercel.app)
+
+Technology Stack
+Layer	Technology
+## Frontend	
+React, Vite, Tailwind CSS
+## Backend
+Python, Flask, Flask-RESTful, SQLAlchemy, Flask-Migrate
+Database	PostgreSQL
+Deployment	Render.com
+
+
