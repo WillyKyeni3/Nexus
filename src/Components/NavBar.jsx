@@ -1,54 +1,52 @@
 import "../App.css";
-import React, { useContext } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../Context/AuthContext";
-
+import { useAuth } from "../Context/AuthContext.jsx";
 
 const NavBar = () => {
-	const { user, logout } = useContext(AuthContext);
-	const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-	const handleLogout = () => {
-		logout();
-		navigate("/login");
-	};
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
-	return (
-		<nav className="navbar">
-			<div className="navbar-logo">
-				<Link to="/">Nexus</Link>
-			</div>
-			<ul className="navbar-links">
-				   <li>
-					   <Link to="/">Home</Link>
-				   </li>
-				   <li>
-					   <Link to="/projectdetail">Projects</Link>
-				   </li>
-				{user ? (
-					<>
-						<li>
-							<Link to="/profile">Profile</Link>
-						</li>
-						<li>
-							<button className="navbar-btn" onClick={handleLogout}>
-								Logout
-							</button>
-						</li>
-					</>
-				) : (
-					<>
-						<li>
-							<Link to="/login">Login</Link>
-						</li>
-						<li>
-							<Link to="/signup">Signup</Link>
-						</li>
-					</>
-				)}
-			</ul>
-		</nav>
-	);
+  return (
+    <nav className="navbar">
+      <div className="navbar-content">
+        {/* Logo */}
+        <div className="navbar-logo">
+          <Link to={user ? "/home" : "/"}>
+           <span className="logo-main">NEX</span>
+            <span className="logo-gradient">US</span>
+		  </Link>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="navbar-links">
+          {user ? (
+            <>
+              <Link to="/home">Projects</Link>
+              {user.role !== "mentor" && (
+                <Link to="/projectform">Create Project</Link>
+              )}
+              <Link to="/profile">Profile</Link>
+              <button className="navbar-btn" onClick={handleLogout}>
+                 <i class="ri-logout-box-r-line"></i>Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="navbar-btn">
+                Login
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
 };
 
 export default NavBar;

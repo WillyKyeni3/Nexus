@@ -5,7 +5,17 @@ import Projectdetail from "../pages/Projectdetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import Projectform from "../pages/Projectform.jsx";
 import Signup from "../pages/Signup.jsx";
+import LandingPage from "../pages/Landingpage.jsx";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
+import EditProject from "../pages/EditProject.jsx";
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/" replace />;
+  return children;
+};
 
 const routes = [
   {
@@ -14,7 +24,15 @@ const routes = [
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <LandingPage />,
+      },
+      {
+        path: "/home",
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/login",
@@ -22,19 +40,39 @@ const routes = [
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: "/projectdetail",
-        element: <Projectdetail />,
+        path: "/projects/:id",
+        element: (
+          <ProtectedRoute>
+            <Projectdetail />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/projectform",
-        element: <Projectform />,
+        element: (
+          <ProtectedRoute>
+            <Projectform />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/signup",
         element: <Signup />,
+      },
+      {
+        path: "/projects/:id/edit",
+        element:(
+          <ProtectedRoute>
+            <EditProject/>
+          </ProtectedRoute>
+        )
       }
     ]
   }

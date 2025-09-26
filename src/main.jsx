@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import route from "./route/route.jsx";
 import { AuthProvider } from "./Context/AuthContext.jsx";
+import "./index.css";
+import "./App.css";
 
 const router = createBrowserRouter(route);
 
