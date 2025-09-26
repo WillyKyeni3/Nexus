@@ -37,7 +37,7 @@ function ProjectDetail() {
 }, [id]);
 
   const handleEdit = () => {
-    navigate(`/edit-project/${id}`);
+    navigate(`/projects/${id}/edit`);
   };
 
   const handleDelete = () => {

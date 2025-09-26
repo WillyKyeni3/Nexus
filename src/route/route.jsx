@@ -8,6 +8,7 @@ import Signup from "../pages/Signup.jsx";
 import LandingPage from "../pages/Landingpage.jsx";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import EditProject from "../pages/EditProject.jsx";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -64,6 +65,14 @@ const routes = [
       {
         path: "/signup",
         element: <Signup />,
+      },
+      {
+        path: "/projects/:id/edit",
+        element:(
+          <ProtectedRoute>
+            <EditProject/>
+          </ProtectedRoute>
+        )
       }
     ]
   }
