@@ -63,7 +63,7 @@ Deployment	Render.com
 
  '''Create a feature branch'''
 
- -git checkout -b feature/YourFeature
+ -git checkout your branch/feature
 
 
   -Commit changes
