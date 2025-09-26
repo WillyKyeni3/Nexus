@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
 
 const FilterBar = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     status: 'all',
     cohort: '',
   });
+   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleStatusChange = (e) => {
     const newFilters = {
@@ -53,6 +57,11 @@ const FilterBar = ({ onFilterChange }) => {
             className="form-input"
           />
         </div>
+          {user && user.role !== "mentor" && (
+                  <button className="btn-accent" onClick={() => navigate("/projectform")}>
+                    <i className="ri-add-line"></i>Create Project
+                  </button>
+                )}
       </div>
     </div>
   );

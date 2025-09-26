@@ -56,11 +56,7 @@ function Home() {
     <div className="project-feed fade-in">
       <div className="feed-header">
         <h2>Project Feed</h2>
-        {user && user.role !== "mentor" && (
-          <button className="btn-accent" onClick={() => navigate("/projectform")}>
-            <i className="ri-add-line"></i>Create Project
-          </button>
-        )}
+      
       </div>
 
       <FilterBar onFilterChange={handleFilterChange} />
