@@ -8,11 +8,14 @@ from Models import Project, User
 
 
 class Projects(Resource):
-    def get (self):
+    def get(self):
         projects = Project.query.all()
-        return make_response(
-            jsonify([project.to_dict() for project in projects] )
-        )
+        project_list = []
+        for project in projects:
+            project_dict = project.to_dict()
+            project_dict['vote_status'] = project.vote_status
+            project_list.append(project_dict)
+        return make_response(jsonify(project_list))
     def post(self):
         from flask import session
         if 'user_id' not in session:

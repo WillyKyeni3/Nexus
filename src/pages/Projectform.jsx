@@ -8,7 +8,7 @@ const ProjectSchema = Yup.object().shape({
     .required("Title is required"),
   description: Yup.string()
     .min(50, "Description must be at least 50 characters")
-    .max(150, "Description cannot be more than 150 characters")
+    .max(5000, "Description cannot be more than 5000 characters")
     .required("Description is required"),
   author_name: Yup.string().required("Author name is required"),
 });

@@ -49,6 +49,27 @@ class Project(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
+    description = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_name = db.Column(db.String)
+    cohort = db.Column(db.String)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    # Relationships
+    user = db.relationship('User', back_populates='projects')
+    votes = db.relationship('Vote', backref='project', lazy=True)
+
+    # Serialization rules
+    serialize_rules = ('-user.projects', '-votes.project')
+
+    @property
+    def vote_status(self):
+        if not self.votes:
+            return "pending"
+        # Return the status of the most recent vote
+        return self.votes[-1].status if self.votes else "pending"
+    title = db.Column(db.String, nullable=False)
     description = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 

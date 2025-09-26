@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, session
 from functools import wraps
-from Models import db, Vote, User
+from Models import db, Vote, User, Project
 
 votes_bp = Blueprint('votes', __name__)
 
@@ -18,7 +18,7 @@ def mentor_required(f):
     return decorated_function
 
 
-# --- Routes ---
+# --- Create or Update Vote ---
 @votes_bp.route('/votes', methods=['POST'])
 @mentor_required
 def create_or_update_vote():
@@ -32,11 +32,12 @@ def create_or_update_vote():
     if not all([project_id, status]):
         return jsonify({'error': 'Missing required fields'}), 400
 
-    if status not in ['approved', 'declined']:
-        return jsonify({'error': 'Status must be either "approved" or "declined"'}), 400
+    if status not in ['approved', 'declined', 'pending']:
+        return jsonify({'error': 'Invalid status'}), 400
 
     try:
         mentor_id = session['user_id']
+
         vote = Vote.query.filter_by(
             mentor_id=mentor_id,
             project_id=project_id
@@ -53,26 +54,55 @@ def create_or_update_vote():
             db.session.add(vote)
 
         db.session.commit()
-        return jsonify(vote.to_dict()), 200
+        return jsonify({
+            "id": vote.id,
+            "status": vote.status,
+            "mentor_id": vote.mentor_id,
+            "project_id": vote.project_id,
+            "mentor_name": vote.mentor.username if vote.mentor else None
+        }), 200
 
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 
+# --- Get all votes for a project ---
 @votes_bp.route('/projects/<int:id>/votes', methods=['GET'])
 def get_project_votes(id):
     votes = Vote.query.filter_by(project_id=id).all()
 
-    total_votes = len(votes)
-    approved_votes = sum(1 for v in votes if v.status == 'approved')
-    declined_votes = sum(1 for v in votes if v.status == 'declined')
-
     return jsonify({
-        'votes': [v.to_dict() for v in votes],
+        'votes': [{
+            "id": v.id,
+            "status": v.status,
+            "mentor_id": v.mentor_id,
+            "mentor_name": v.mentor.username if v.mentor else None
+        } for v in votes],
         'statistics': {
-            'total': total_votes,
-            'approved': approved_votes,
-            'declined': declined_votes
+            'total': len(votes),
+            'approved': sum(1 for v in votes if v.status == 'approved'),
+            'declined': sum(1 for v in votes if v.status == 'declined')
         }
     }), 200
+
+
+# --- Get votes made by the logged-in mentor ---
+@votes_bp.route('/votes/mentor', methods=['GET'])
+@mentor_required
+def get_mentor_votes():
+    mentor_id = session.get('user_id')
+    votes = Vote.query.filter_by(mentor_id=mentor_id).all()
+
+    voted_projects = []
+    for vote in votes:
+        project = Project.query.get(vote.project_id)
+        if project:
+            voted_projects.append({
+                'id': project.id,
+                'title': project.title,
+                'description': project.description,
+                'vote_status': vote.status
+            })
+
+    return jsonify(voted_projects), 200
