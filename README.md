@@ -57,45 +57,24 @@ Python, Flask, Flask-RESTful, SQLAlchemy, Flask-Migrate
 Database	PostgreSQL
 Deployment	Render.com
 
+# Contributing
 
-# Installation (Local Development)
-1. Clone the repository
-git clone https://github.com/your-username/nexus-app.git
-cd nexus-app
+## 1. Fork the repository
 
-2. Backend setup
-cd server
-python3 -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-.venv\Scripts\activate      # Windows
+ '''Create a feature branch'''
 
-pip install -r requirements.txt
-
-3. Configure environment variables
-
-Create a .env file in the backend folder:
-
-SECRET_KEY=your-secret-key
-DATABASE_URL=postgresql://my_database_user:password@host:port/nexus_db
+ -git checkout -b feature/YourFeature
 
 
-DATABASE_URL points to your PostgreSQL database (deployed or local).
+  -Commit changes
 
-4. Run database migrations
-flask db upgrade
-
-5. Start the backend server
-flask run
+  -git commit -m "Add new feature"
 
 
-Default server runs at http://127.0.0.1:5000.
+   -Push branch and create a pull request
 
-6. Frontend setup
-cd ../frontend
-npm install
-npm run dev
+  # License
 
-
-Default frontend runs at http://localhost:5173.
+This project is licensed under MIT License.
 
 
