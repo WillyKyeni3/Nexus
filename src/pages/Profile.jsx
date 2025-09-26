@@ -1,17 +1,18 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import Api from "../Services/Api";
+import { useNavigate } from "react-router-dom";   // ✅ added
 
 function Profile() {
     const { user } = useContext(AuthContext);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();   // ✅ added
 
     useEffect(() => {
         if (user) {
-            Api.get(`/users/${user.user}`)
+            Api.get(`/users/${user.id}`)
                 .then((res) => {
                     setProfile(res.data);
                     setLoading(false);
@@ -48,7 +49,13 @@ function Profile() {
                 </div>
                 <div className="info-group">
                     <label className="info-label">Cohort</label>
-                    <div className="info-value">{profile.cohort || "N/A"}</div>
+                    <div className="info-value">
+                        {profile.cohort
+                            ? typeof profile.cohort === "object"
+                                ? profile.cohort.name
+                                : profile.cohort
+                            : "N/A"}
+                    </div>
                 </div>
             </div>
             
@@ -59,7 +66,12 @@ function Profile() {
                 ) : (
                     <div className="projects-grid">
                         {profile.projects.map((p) => (
-                            <div key={p.id} className="project-card">
+                            <div 
+                                key={p.id} 
+                                className="project-card"
+                                onClick={() => navigate(`/projects/${p.id}`)}   // ✅ navigate to ProjectDetail
+                                style={{ cursor: "pointer" }}   // ✅ make it clickable
+                            >
                                 <h3>{p.title}</h3>
                                 <div className="project-meta">
                                     <span className={`status-badge status-${p.status}`}>

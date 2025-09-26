@@ -17,7 +17,10 @@ const NavBar = () => {
       <div className="navbar-content">
         {/* Logo */}
         <div className="navbar-logo">
-          <Link to={user ? "/home" : "/"}>NEXUS</Link>
+          <Link to={user ? "/home" : "/"}>
+           <span className="logo-main">NEX</span>
+            <span className="logo-gradient">US</span>
+		  </Link>
         </div>
 
         {/* Navigation Links */}

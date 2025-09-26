@@ -28,6 +28,8 @@
   --gradient-primary: linear-gradient(135deg, hsl(222, 47%, 11%), hsl(237, 49%, 15%));
   --gradient-accent: linear-gradient(135deg, hsl(188, 95%, 42%), hsl(199, 89%, 48%));
   --gradient-hero: linear-gradient(135deg, hsl(222, 47%, 11%) 0%, hsl(237, 49%, 15%) 50%, hsl(188, 95%, 42%) 100%);
+  --gradient-logo: linear-gradient(90deg, #6366f1, #14b8a6);
+  
   
   /* Border Radius */
   --radius-sm: 0.5rem;
@@ -67,6 +69,7 @@ body {
   background: var(--gradient-primary);
   padding: 1rem 2rem;
   box-shadow: var(--shadow-md);
+  backdrop-filter: blur(6px);
 }
 
 .navbar-content {
@@ -84,19 +87,49 @@ body {
   text-decoration: none;
   letter-spacing: 2px;
 }
+.logo-main {
+  color:#ffffff;
+}
+
+.logo-gradient {
+  background: var(--gradient-logo);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .navbar-links {
   display: flex;
   gap: 2rem;
   align-items: center;
 }
-
 .navbar-links a {
-  color: var(--color-primary-light);
+  position: relative;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.2s;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
 }
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #007bff, #00c6ff);
+  transition: width 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #007bff;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
 
 .navbar-btn {
   background: var(--color-accent);
@@ -220,6 +253,27 @@ body {
   color: var(--color-primary);
   font-size: 1.25rem;
   margin-bottom: 1rem;
+}
+
+.project-card h3 ::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #007bff, #00c6ff);
+  transition: width 0.3s ease;
+}
+
+.project-card h3:hover {
+  text-decoration: underline;
+  color: var(--color-accent-hover);
+  cursor: pointer;
+}
+
+.project-card h3:hover::after {
+  width: 100%;
 }
 
 .project-card p {
@@ -432,6 +486,12 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.project-title :hover {
+  text-decoration: underline;
+  color: var();
+}
+
+
 .project-description {
   font-size: 1.1rem;
   line-height: 1.7;
@@ -441,13 +501,13 @@ body {
 }
 
 .project-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  display: inline-flex;
+  gap: 15rem;
   padding: 1.5rem;
   background: var(--color-muted);
   border-radius: var(--radius);
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .project-meta span {
@@ -609,4 +669,190 @@ body {
   .main-content {
     padding: 1rem;
   }
+}
+/* Edit Project Page */
+.edit-project {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.edit-project h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  text-align: center;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.edit-project form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.edit-project label {
+  font-weight: 500;
+  color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-project input,
+.edit-project textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-project input:focus,
+.edit-project textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-hover);
+  outline: none;
+}
+
+.edit-project textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Buttons */
+.edit-project button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.edit-project button[type="submit"] {
+  background: var(--gradient-accent);
+  color: white;
+}
+
+.edit-project button[type="submit"]:hover {
+  transform: translateY(-2px);
+}
+
+.edit-project button[type="button"] {
+  background: var(--color-muted);
+  color: var(--color-primary);
+}
+
+.edit-project button[type="button"]:hover {
+  background: var(--color-muted-dark);
+  color: var(--color-primary-light);
+}
+
+
+/* Profile Page */
+.profile-container {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.profile-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.profile-info {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.info-group {
+  padding: 1rem 1.5rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-muted-dark);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-group:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.info-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  opacity: 0.75;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+/* Projects Section */
+.profile-section {
+  margin-top: 2.5rem;
+}
+
+.profile-section h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.no-projects {
+  text-align: center;
+  padding: 1rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  opacity: 0.8;
+  font-size: 1rem;
+}
+
+/* Grid for projects inside Profile */
+.profile-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.profile-projects .project-card {
+  border: 1px solid var(--color-muted);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.profile-projects .project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
