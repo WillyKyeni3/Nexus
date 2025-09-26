@@ -20,7 +20,7 @@ app.config['SECRET_KEY'] = 'dev-secret-key-123'
 
 # ✅ Cookie/session settings for localhost
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'   # works with localhost
-app.config['SESSION_COOKIE_SECURE'] = False     # must be False unless using https
+app.config['SESSION_COOKIE_SECURE'] = True    # must be False unless using https
 app.json.compact = False
 
 # Define metadata and instantiate db
