@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dev-secret-key-123'
 
 # ✅ Cookie/session settings for localhost
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'   # works with localhost
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'   # works with localhost
 app.config['SESSION_COOKIE_SECURE'] = True    # must be False unless using https
 app.json.compact = False
 
