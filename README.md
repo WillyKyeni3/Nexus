@@ -1,12 +1,49 @@
-# React + Vite
+## Nexus Project Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application for managing projects, mentors, cohorts, and votes. Users can create projects, assign mentors, and track approvals/declines. Built with Flask, PostgreSQL, and React, and deployed on Render.
 
-Currently, two official plugins are available:
+# Features
+##Backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+REST API with Flask and Flask-RESTful
 
-## Expanding the ESLint configuration
+PostgreSQL database with SQLAlchemy ORM
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Supports CRUD operations for:
+
+Users
+
+Projects
+
+Cohorts
+
+Votes
+
+Session and cookie management
+
+CORS configured for frontend
+
+## Frontend
+
+React SPA with:
+
+Project listing
+
+Project creation and editing
+
+Mentor assignment
+
+Voting system for project approval
+
+Fully communicates with deployed backend API
+
+Search and filter functionality
+
+
+##Deployment
+
+Backend deployed on Render.com(https://nexus-db-2.onrender.com)
+
+PostgreSQL database hosted on Render
+
+Frontend can be served on any static host or local dev server
