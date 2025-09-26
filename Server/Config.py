@@ -43,6 +43,7 @@ CORS(
     resources={r"/*": {
         "origins": [
             "http://localhost:5173"
+            "nexus-seven-orcin.vercel.app"
         ]
     }},
 )
