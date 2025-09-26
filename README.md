@@ -46,4 +46,4 @@ Backend deployed on Render.com(https://nexus-db-2.onrender.com)
 
 PostgreSQL database hosted on Render
 
-Frontend can be served on any static host or local dev server
+Frontend can be served on any static host or local dev server(https://nexus-seven-orcin.vercel.app)
